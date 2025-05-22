@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Видео</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    video {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" autoplay playsinline>
+    <source src="https://disk.yandex.ru/i/btghjENdkpMVQA" type="video/mp4">
+    Ваш браузер не поддерживает видео.
+  </video>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    const video = document.getElementById('video');
+
+    // Закрыть WebApp после окончания видео
+    video.onended = () => {
+      tg.close();
+    };
+
+    // Инициализация Telegram Web App
+    tg.ready();
+    tg.expand(); // Разворачивает на весь экран
+  </script>
+</body>
+</html>
