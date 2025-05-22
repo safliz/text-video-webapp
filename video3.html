@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Видео 3</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    video {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" autoplay>
+    <source src="video3.mov" type="video/quicktime">
+    Твой браузер не поддерживает видео.
+  </video>
+
+  <script>
+    const video = document.getElementById('video');
+    video.onended = () => {
+      alert('Видео закончилось. Вернись в Telegram и введи текст.');
+      window.location.href = "https://t.me/text_memory_bot"
+    };
+  </script>
+</body>
+</html>
