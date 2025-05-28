@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Видео 2</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
       margin: 0;
@@ -12,25 +11,78 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
     }
     video {
       width: 100%;
+      max-width: 600px;
       height: auto;
+      background: black;
+    }
+    #message {
+      display: none;
+      font-size: 1.5em;
+      padding: 20px;
     }
   </style>
 </head>
 <body>
-  <video id="video" autoplay>
-    <source src="video2.mp4" type="video/mp4">
-    Твой браузер не поддерживает видео.
+  <video id="video" preload="auto" playsinline>
+    <source src="video2.mp4" type="video/mp4" />
+    Ваш браузер не поддерживает видео.
   </video>
 
+  <div id="message">Вы уже смотрели это видео.<br>Пожалуйста, вернитесь в Telegram и введите текст.</div>
+
   <script>
+    // Проверяем, смотрел ли пользователь видео
+    const videoKey = 'video2_watched';
+    const videoWatched = localStorage.getItem(videoKey);
+
     const video = document.getElementById('video');
-    video.onended = () => {
-      Telegram.WebApp.sendData("watched");
-      Telegram.WebApp.close();
-    };
+    const message = document.getElementById('message');
+
+    if (videoWatched === 'true') {
+      // Видео уже смотрели — скрываем плеер, показываем сообщение
+      video.style.display = 'none';
+      message.style.display = 'block';
+    } else {
+      // Видео еще не смотрели — запускаем воспроизведение сразу без паузы и перемотки
+      video.autoplay = true;
+      video.controls = false;
+      video.muted = false; // Можно убрать, если звук нужен
+
+      // Блокируем паузу и перемотку (события)
+      video.addEventListener('pause', () => {
+        if (!video.ended) video.play();
+      });
+      video.addEventListener('seeking', () => {
+        if (!video.ended) video.currentTime = 0; // запрещаем перемотку
+      });
+
+      video.play();
+
+      video.onended = () => {
+        // Отмечаем, что видео просмотрено
+        localStorage.setItem(videoKey, 'true');
+
+        // Сообщаем пользователю и закрываем WebApp (если в Telegram)
+        alert('Видео закончилось. Вернитесь в Telegram и введите текст.');
+
+        if (window.Telegram && Telegram.WebApp) {
+          Telegram.WebApp.close();
+        } else {
+          // Для отладки в браузере — просто скрываем видео и показываем сообщение
+          video.style.display = 'none';
+          message.style.display = 'block';
+        }
+      };
+    }
   </script>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
 </html>
