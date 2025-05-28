@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>Просмотр видео</title>
+  <meta charset="UTF-8">
+  <title>Видео 2</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
       margin: 0;
-      background-color: rgb(0, 0, 0);
+      background: black;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,24 +21,16 @@
 </head>
 <body>
   <video id="video" autoplay>
-    <source src="video2.mp4" type="video/mp4" />
+    <source src="video2.mp4" type="video/mp4">
     Твой браузер не поддерживает видео.
   </video>
 
   <script>
-    const tg = window.Telegram.WebApp;
     const video = document.getElementById('video');
-    tg.expand(); // Открыть WebApp на весь экран
-
-    // Закрыть WebApp по окончанию видео
     video.onended = () => {
-      tg.close();
+      Telegram.WebApp.sendData("watched");
+      Telegram.WebApp.close();
     };
-
-    // Запретить паузу и перемотку
-    video.controls = false;
-    video.addEventListener('contextmenu', e => e.preventDefault()); // правая кнопка
-    video.addEventListener('pause', () => video.play());
   </script>
 </body>
 </html>
